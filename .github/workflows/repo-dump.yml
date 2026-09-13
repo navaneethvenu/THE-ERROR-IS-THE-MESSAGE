@@ -1,0 +1,46 @@
+name: repo-dump
+on:
+  workflow_dispatch:
+    inputs:
+      source_repository:
+        description: "owner/name to dump (default: this repository)"
+        required: false
+        default: ""
+      output_branch:
+        description: "branch the dump is committed to"
+        required: false
+        default: "repo-dump"
+      include_attachments:
+        description: "download attached media (images/files/binaries)"
+        type: boolean
+        required: false
+        default: true
+permissions:
+  contents: write
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Run the dump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE: ${{ inputs.source_repository || github.repository }}
+        run: |
+          python3 tools/repo_dump.py --repo "$SOURCE" --out dump \
+            ${{ inputs.include_attachments == false && '--skip-attachments' || '' }}
+      - name: Commit dump to output branch
+        run: |
+          git config user.name "repo-dump[bot]"
+          git config user.email "repo-dump[bot]@users.noreply.github.com"
+          BRANCH="${{ inputs.output_branch || 'repo-dump' }}"
+          git checkout --orphan "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
+          git rm -rf . >/dev/null 2>&1 || true
+          git clean -fdx >/dev/null 2>&1 || true
+          cp -r dump/. .
+          git add -A
+          git commit -m "repo dump of ${SOURCE:-${{ github.repository }}}" || echo "nothing new"
+          git push -f origin "$BRANCH"
