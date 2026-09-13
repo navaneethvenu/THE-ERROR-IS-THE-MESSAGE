@@ -21,8 +21,10 @@ import urllib.request
 
 API = "https://api.github.com"
 ATTACH_RE = re.compile(
-    r"https://(?:github\.com/user-attachments/(?:assets|files)/"
-    r"[0-9a-fA-F-]+|user-images\.githubusercontent\.com/[^\s)\"'>]+)")
+    r"https://(?:"
+    r"github\.com/user-attachments/assets/[0-9a-fA-F-]+|"
+    r"github\.com/user-attachments/files/[0-9]+/[^\s)\"'>]+|"
+    r"user-images\.githubusercontent\.com/[^\s)\"'>]+)")
 
 
 class DumpError(Exception):
