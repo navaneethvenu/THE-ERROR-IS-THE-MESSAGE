@@ -35,10 +35,14 @@ class GitHubClient:
         self.max_retries = max_retries
         self.requests = 0
 
-    def _headers(self, accept="application/vnd.github+json"):
-        h = {"Accept": accept, "X-GitHub-Api-Version": "2022-11-28",
+    def _headers(self, url):
+        h = {"Accept": "application/vnd.github+json",
+             "X-GitHub-Api-Version": "2022-11-28",
              "User-Agent": "repo-dump-tool"}
-        if self.token:
+        # API tokens are rejected by github.com's web/CDN hosts (403), so
+        # only send Authorization to the API host. Public assets download
+        # fine anonymously.
+        if self.token and urllib.parse.urlparse(url).netloc == "api.github.com":
             h["Authorization"] = "Bearer " + self.token
         return h
 
@@ -46,7 +50,7 @@ class GitHubClient:
         url = path if path.startswith("http") else API + path
         if params:
             url += "?" + urllib.parse.urlencode(params)
-        req = urllib.request.Request(url, headers=self._headers())
+        req = urllib.request.Request(url, headers=self._headers(url))
         for attempt in range(self.max_retries):
             try:
                 with urllib.request.urlopen(req, timeout=60) as resp:
@@ -55,11 +59,16 @@ class GitHubClient:
                         return resp.read(), resp.headers
                     return json.loads(resp.read().decode("utf-8")), resp.headers
             except urllib.error.HTTPError as e:
-                if e.code in (403, 429) and "rate limit" in \
-                        e.read().decode("utf-8", "ignore").lower():
-                    reset = int(e.headers.get("X-RateLimit-Reset", time.time() + 60))
-                    wait = max(1, min(reset - int(time.time()), 900))
-                    print("rate limited; sleeping %ds" % wait, file=sys.stderr)
+                body = e.read().decode("utf-8", "ignore").lower()
+                if e.code in (403, 429) and attempt < self.max_retries - 1:
+                    if "rate limit" in body:
+                        reset = int(e.headers.get("X-RateLimit-Reset",
+                                                  time.time() + 60))
+                        wait = max(1, min(reset - int(time.time()), 900))
+                    else:
+                        wait = 5 * (attempt + 1)  # throttled web/CDN host
+                    print("HTTP %s; retrying in %ds" % (e.code, wait),
+                          file=sys.stderr)
                     time.sleep(wait)
                     continue
                 if e.code >= 500 and attempt < self.max_retries - 1:
