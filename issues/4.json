@@ -1,0 +1,30 @@
+{
+  "number": 4,
+  "state": "open",
+  "title": "Eat like a king",
+  "author": "attogram",
+  "created_at": "2026-08-30T07:17:24Z",
+  "closed_at": null,
+  "labels": [],
+  "assignees": [],
+  "milestone": null,
+  "body": "<img width=\"3000\" height=\"4000\" alt=\"Image\" src=\"assets/334-1bf58841-63eb-43a0-9941-7339c8af60f3\" />\n<img width=\"4000\" height=\"3000\" alt=\"Image\" src=\"assets/335-daabaa10-bf5f-4206-a058-d14bf647e94f\" />",
+  "reactions": 0,
+  "url": "https://github.com/attogram/THE-ERROR-IS-THE-MESSAGE/issues/4",
+  "comments": [
+    {
+      "author": "attogram",
+      "created_at": "2026-08-30T07:18:58Z",
+      "updated_at": "2026-08-30T07:18:58Z",
+      "body": "<img width=\"3000\" height=\"4000\" alt=\"Image\" src=\"assets/330-23ea6348-9287-4a15-872e-724aaa357ad3\" />\n<img width=\"2544\" height=\"3392\" alt=\"Image\" src=\"assets/331-a7afee49-d494-42d7-b31e-606daf3c7dc2\" />\n<img width=\"4000\" height=\"3000\" alt=\"Image\" src=\"assets/332-d5c56ac0-b16a-4ffa-bd0d-18308cb41f0c\" />",
+      "reactions": 0
+    },
+    {
+      "author": "attogram",
+      "created_at": "2026-08-30T07:34:31Z",
+      "updated_at": "2026-08-30T07:34:31Z",
+      "body": "<img width=\"4000\" height=\"3000\" alt=\"Image\" src=\"assets/333-7eab9a65-b961-4c78-9278-3146943783b2\" />",
+      "reactions": 0
+    }
+  ]
+}

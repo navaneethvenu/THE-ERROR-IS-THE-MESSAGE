@@ -1,0 +1,28 @@
+{
+  "number": 61,
+  "state": "open",
+  "title": "feat: add mobile-friendly repository dump workflow",
+  "author": "iliasaberkane6-lab",
+  "created_at": "2026-09-13T08:36:28Z",
+  "closed_at": null,
+  "labels": [],
+  "assignees": [],
+  "milestone": null,
+  "body": "## Summary\n\nImplements the repository dump tool requested in #60.\n\n- Adds a mobile-friendly `workflow_dispatch` workflow with `source_repository`, output directory, and attachment controls.\n- Exports all issues, pull requests, issue comments, reviews, inline review comments, releases, release notes, tags, and release assets through the GitHub REST API.\n- Downloads GitHub-hosted attachments referenced by discussions while leaving ordinary external links untouched.\n- Writes deterministic JSON indexes plus a manifest with counts, hashes, and failed-download records.\n- Uses only the Python standard library; no paid service or third-party dependency is required.\n\n## Validation\n\n- `python -m unittest discover -s tests -v`\n- `python -m py_compile tools/repo_dump.py`\n- `git diff --check`\n- Authenticated read-only smoke run against this repository: 60 issues and 4 releases discovered.\n\nThe workflow can be started from GitHub's web or mobile Actions UI and commits the resulting dump into `repo-dump/`.\n",
+  "reactions": 0,
+  "url": "https://github.com/attogram/THE-ERROR-IS-THE-MESSAGE/pull/61",
+  "merged_at": null,
+  "head": "agent/repository-dump-tool",
+  "base": "main",
+  "comments": [
+    {
+      "author": "iliasaberkane6-lab",
+      "created_at": "2026-09-13T08:58:57Z",
+      "updated_at": "2026-09-13T08:58:57Z",
+      "body": "Follow-up commit `dc32aea` hardens attachment handling: API tokens are never sent to signed CDN URLs, malformed URL-like text is ignored, and tokens are redacted from errors.\n\nValidation: 4/4 local tests pass; a real 10.6 MB GitHub-hosted attachment downloaded successfully. The workflow remains dependency-free and mobile-triggerable.",
+      "reactions": 0
+    }
+  ],
+  "reviews": [],
+  "review_comments": []
+}

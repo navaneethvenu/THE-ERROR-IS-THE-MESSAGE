@@ -1,0 +1,20 @@
+{
+  "number": 65,
+  "state": "open",
+  "title": "Archive repository conversations and media with verifiable recovery",
+  "author": "nexicturbo",
+  "created_at": "2026-09-13T09:24:30Z",
+  "closed_at": null,
+  "labels": [],
+  "assignees": [],
+  "milestone": null,
+  "body": "Related to #60. A normal git clone does not preserve issue/PR conversations or uploaded media. This adds a dependency-free Python exporter that saves the public repository's issues, PRs, full comments/reviews, releases, tag metadata, release assets, and GitHub-uploaded files alongside readable Markdown, raw JSON, source mappings and SHA-256 checksums.\n\nLarge files are preserved in ordered 48 MiB chunks with a restoration command that verifies each part and the complete original. Missing, inaccessible, oversized or truncated downloads produce a nonzero exit and an explicitly incomplete manifest. Reruns verify cached files before reusing them.\n\nValidation so far: 12 local regression tests pass, including pagination, reply context, attachment formats, credential handling on redirects, incomplete downloads, reruns, corrupt caches, and lossless large-file reconstruction. A full run against this repository is in progress. The initial live run exposed GitHub's legacy attachment S3 host and malformed URLs in discussion text; both are now handled. **The complete target-repository demonstration is not yet claimed; this PR remains draft until that verification finishes.**\n\nThe phone-friendly manual Actions workflow is supplied as `docs/repository-archive.workflow.yml`, with installation and operation instructions in `docs/REPOSITORY_ARCHIVE.md`. GitHub rejected registering the workflow with my current credential because it lacks the `workflow` permission. The template therefore needs a one-time owner copy to `.github/workflows/repository-archive.yml`; no hosted Actions run is claimed. It writes the archive to a dedicated branch and does not replace the source branch.\n\nThe documentation explicitly distinguishes this sequential public API snapshot from an atomic backup, and lists unavailable/deleted data, native GitHub Discussions and other out-of-scope resources. No external paid service or new credentials are required by the tool itself.\n",
+  "reactions": 0,
+  "url": "https://github.com/attogram/THE-ERROR-IS-THE-MESSAGE/pull/65",
+  "merged_at": null,
+  "head": "feature/repository-archive",
+  "base": "main",
+  "comments": [],
+  "reviews": [],
+  "review_comments": []
+}

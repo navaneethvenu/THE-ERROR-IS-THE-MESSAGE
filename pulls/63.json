@@ -1,0 +1,20 @@
+{
+  "number": 63,
+  "state": "open",
+  "title": "feat: add mobile repository history archive workflow",
+  "author": "Nukeys",
+  "created_at": "2026-09-13T09:07:51Z",
+  "closed_at": null,
+  "labels": [],
+  "assignees": [],
+  "milestone": null,
+  "body": "Implements #60.\n\n### What this adds\n\n- A manually triggered **Save repository history** GitHub Actions workflow that can be launched from GitHub mobile/web.\n- Dependency-free Python export of open/closed issues, pull requests, conversation comments, reviews, inline review comments, releases, tags, release assets, source archives, and GitHub-hosted attachments.\n- A dedicated `repository-archive` branch for generated output, so the default branch is not filled with archive data.\n- Streaming asset downloads with SHA-256 checksums and 40 MiB Git-friendly chunks for large files.\n- A restore helper that reassembles chunked assets and verifies size + SHA-256.\n- Explicit incomplete-state handling: API/download failures are recorded in `manifest.json`, the partial archive is still preserved, and the workflow fails visibly instead of reporting a false success.\n- Credential-safe downloads: the token is sent only to `api.github.com` and removed on cross-host redirects.\n\n### Validation\n\n```text\npython -m unittest discover -s tests -v   # 14 tests\npython -m py_compile tools/repo_dump.py tools/repo_restore.py\ngit diff --check\n```\n\nNo generated repository dump is included in this PR. After merge, running the workflow creates/updates the `repository-archive` branch and can be used directly against this repository for the acceptance demonstration.\n",
+  "reactions": 0,
+  "url": "https://github.com/attogram/THE-ERROR-IS-THE-MESSAGE/pull/63",
+  "merged_at": null,
+  "head": "feat/repository-history-dump-20260913120743",
+  "base": "main",
+  "comments": [],
+  "reviews": [],
+  "review_comments": []
+}
