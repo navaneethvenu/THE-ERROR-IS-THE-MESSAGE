@@ -29,10 +29,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SOURCE: ${{ inputs.source_repository || github.repository }}
-        run: |
-          python3 tools/repo_dump.py --repo "$SOURCE" --out dump \
-            ${{ inputs.include_attachments == false && '--skip-attachments' || '' }}
+          SKIP: ${{ inputs.include_attachments == false && '--skip-attachments' || '' }}
+        run: python3 tools/repo_dump.py --repo "$SOURCE" --out "$RUNNER_TEMP/dump" $SKIP
       - name: Commit dump to output branch
+        env:
+          SOURCE: ${{ inputs.source_repository || github.repository }}
         run: |
           git config user.name "repo-dump[bot]"
           git config user.email "repo-dump[bot]@users.noreply.github.com"
@@ -40,7 +41,7 @@ jobs:
           git checkout --orphan "$BRANCH" 2>/dev/null || git checkout "$BRANCH"
           git rm -rf . >/dev/null 2>&1 || true
           git clean -fdx >/dev/null 2>&1 || true
-          cp -r dump/. .
+          cp -r "$RUNNER_TEMP/dump/." .
           git add -A
-          git commit -m "repo dump of ${SOURCE:-${{ github.repository }}}" || echo "nothing new"
+          git commit -m "repo dump of $SOURCE" || echo "nothing new"
           git push -f origin "$BRANCH"
