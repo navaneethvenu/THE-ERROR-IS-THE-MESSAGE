@@ -55,6 +55,11 @@ class AttachmentTests(unittest.TestCase):
     def test_empty_and_none(self):
         self.assertEqual(repo_dump.find_attachments(None, ""), [])
 
+    def test_files_url_keeps_filename(self):
+        url = ("https://github.com/user-attachments/files/32157681/"
+               "bounty.repo.dump.0001.pdf")
+        self.assertEqual(repo_dump.find_attachments("spec: %s)" % url), [url])
+
 
 class DumpTests(unittest.TestCase):
     def setUp(self):
